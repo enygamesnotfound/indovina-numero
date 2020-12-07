@@ -1,190 +1,48 @@
-#include <iostream>
-#include <conio.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int main()
-{
+struct difficolta_t {
+    string nome;
+    size_t limite;
+    size_t tentativi;
+};
 
-    string difficoltà;
-    long int n;
-    int ngiusto;
-    long int tentativi;
+int main() {
+    vector<difficolta_t> difficolta_disponibili = {
+        difficolta_t{ .nome = "easy", .limite = 10, .tentativi = 4 },
+        difficolta_t{ .nome = "medium", .limite = 100, .tentativi = 7 },
+        difficolta_t{ .nome = "hard", .limite = 1000, .tentativi = 10 },
+        difficolta_t{ .nome = "extreme", .limite = 10000, .tentativi = 14 },
+        difficolta_t{ .nome = "impossible", .limite = 3815637465874653846, .tentativi = 62 },
+        difficolta_t{ .nome = "?", .limite = 2, .tentativi = 289015 },
+    };
 
-    cout << "benvenuto!\n";
-    cout << "per iniziare seleziona la difficoltà:\n";
-    cout << "easy\nmedium\nhard\nextreme\nimpossible\n?\n\n";
-
-    cin >> difficoltà;
-
-    if (difficoltà == "easy")
-    {
-        n = rand() % 10;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 10:\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "hai indovinato\n";
-                cout << "il numero era: " << n << "\n";
-                return 0;
+    cout << "Benvenuto!\nPer iniziare seleziona la difficolta':" << endl;
+    for (auto &el : difficolta_disponibili) cout << "- " << el.nome << endl;
+    cout << endl << "La tua scelta: ";
+    string difficolta_scelta;
+    cin >> difficolta_scelta;
+    bool trovato = false;
+    for (auto &el : difficolta_disponibili)
+        if (el.nome == difficolta_scelta) {
+            trovato         = true;
+            size_t numero   = random_device()() % el.limite + 1, scelto, tentativi;
+            bool indovinato = false;
+            cout << "Indovina il numero compreso tra 1 e " << el.limite << endl;
+            for (tentativi = 0; tentativi < el.tentativi && !indovinato; tentativi++) {
+                cout << "Inserisci il numero: ";
+                cin >> scelto;
+                if (scelto == numero) indovinato = true;
+                else if (scelto < numero)
+                    cout << "Il numero e' piu' alto di quello inserito" << endl;
+                else
+                    cout << "Il numero e' piu' basso di quello inserito" << endl;
             }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 10)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
+            if (indovinato) cout << "Complimenti! Hai indovinato il numero" << endl;
+            else
+                cout << "Non sei riuscito ad indovinare il numero! Era: " << numero << endl;
         }
-    }
-
-    if (difficoltà == "medium")
-    {
-        n = rand() % 100;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 100:\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "hai indovinato\n";
-                cout << "il numero era: " << n << "\n";
-                return 0;
-            }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 10)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-        }
-    }
-
-    if (difficoltà == "hard")
-    {
-        n = rand() % 1000;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 1000\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "hai indovinato\n";
-                cout << "il numero era: " << n << "\n";
-                return 0;
-            }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 10)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-        }
-    }
-
-    if (difficoltà == "extreme")
-    {
-        n = rand() % 10000;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 10000\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "hai indovinato\n";
-                cout << "il numero era: " << n << "\n";
-                return 0;
-            }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 5)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-        }
-    }
-
-    if (difficoltà == "impossible")
-    {
-        n = rand() % 438156;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 43815637465874653846\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "?????come hai fatto?????\n";
-                cout << "il numero era " << n << "\n";
-                return 0;
-            }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 2)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-        }
-    }
-
-    if (difficoltà == "?")
-    {
-        n = rand() % 2;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero misterioso\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "uau\n";
-                cout << "il numero era: " << n;
-                return 0;
-            }
-            if (tentativi == 289015)
-            {
-                cout << "mamma mia!\n";
-            }
-        }
-    }
+    if (!trovato) cout << "Difficolta' scelta non disponibile" << endl;
+    return 0;
 }
