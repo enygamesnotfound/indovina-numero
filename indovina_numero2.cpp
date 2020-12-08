@@ -1,424 +1,81 @@
-/**
- * @file indovina_numero.cpp
- * @author eny (enea.romanno@gmail.com)
- * @brief indovina il numero, ma con i power up!!!
- * @version 2.0
- * @date 2020-12-05
- * 
- * @copyright Copyright (c) 2020
- * 
- */
-
-#include <iostream>
-#include <conio.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-/*ci sono i power up!!!!
-t++ = ti da 5 tentativi in più
-n++ = ti da il numero giusto(attenzione! usarlo solo in caso di emergenza, non barare!!!!)
-*/
+struct difficolta_t {
+    string nome;
+    size_t limite;
+    int64_t tentativi;
+};
 
-/*i power up negativi!!!(per i più bravi)
-t-- = ti toglie 5 tentativi
-n-- = cambia il numero che devi indovinare
-*/
+int main() {
+    vector<difficolta_t> difficolta_disponibili = {
+        difficolta_t{ .nome = "easy", .limite = 10, .tentativi = 4 },
+        difficolta_t{ .nome = "medium", .limite = 100, .tentativi = 7 },
+        difficolta_t{ .nome = "hard", .limite = 1000, .tentativi = 10 },
+        difficolta_t{ .nome = "extreme", .limite = 10000, .tentativi = 14 },
+        difficolta_t{ .nome = "impossible", .limite = 3815637465874653846, .tentativi = 62 },
+        difficolta_t{ .nome = "?", .limite = 2, .tentativi = 289015 },
+    };
 
-/*i power up casuali che aumentano!!!(per chi è bravo o non)
-t+? = ti da un numero casuale di tentativi
-n+? = cambia il numero e lo rende casualissimo
-*/
-
-/*e i power up casuali che diminuiscono!!!(per chi è bravo e non)
-t-? = ti toglie un numero casuale di tentativi
-*/
-
-int main()
-{
-
-    string difficoltà;
-    string powerup;
-    long int n;
-    int ngiusto;
-    long int tentativi;
-
-    cout << "benvenuto!\n";
-    cout << "per iniziare seleziona la difficoltà:\n";
-    cout << "easy\nmedium\nhard\nextreme\nimpossible\n?\n";
-    cout << "attento a non scrivere male nei power up\n";
-    cout << "intendo che se vuoi usare un powerup\n\n";
-    cout << "1 devi stare attento alla scritta\n\n";
-    cout << "2 ci sono 6 power up e puoi scrivere:\n";
-    cout << "t++ = da 5 tentativi in più\n";
-    cout << "n++ = ti da un numero giusto\n";
-    cout << "t-- = ti toglie 5 tentativi\n";
-    cout << "n-- = cambia il numero che devi scoprire\n";
-    cout << "t+? = ti da un numero casuale di tentativi\n";
-    cout << "n+? = ti cambia il numero e lo rende casualissimo\n";
-    cout << "t-? = ti toglie un numero casuale di tentativi\n";
-
-    cin >> difficoltà;
-
-    if (difficoltà == "easy")
-    {
-        n = rand() % 10;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 10:\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "hai indovinato\n";
-                cout << "il numero era: " << n << "\n";
-                return 0;
-            }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 10)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-            cout << "\n";
-            cout << "scrivi una qialsiasi lettera per non avere powerup\n";
-            cin >> powerup;
-            if (powerup == "t++")
-            {
-                tentativi -= 5;
-                cout << "ti ho dato 5 tentativi";
-            }
-            else if (powerup == "n++")
-            {
-                cout << "il numero era: " << n << "\n";
-            }
-            else if (powerup == "t--")
-            {
-                tentativi += 5;
-            }
-            else if (powerup == "n--")
-            {
-                n = rand() % 10;
-            }
-            else if (powerup == "t+?")
-            {
-                tentativi = rand() % 10;
-            }
-            else if (powerup == "n+?")
-            {
-                n = rand();
-            }
-            else if (powerup == "t-?")
-            {
-                tentativi += rand();
-            }
+    auto gestisciPowerup = [](string powerup, size_t &numero, int64_t &tentativi, size_t limite) {
+        if (powerup == "t+") {
+            tentativi -= 5;
+            cout << "Sono stati aggiunti 5 tentativi" << endl;
+        } else if (powerup == "t-") {
+            tentativi += 5;
+            cout << "Sono stati tolti 5 tentativi" << endl;
+        } else if (powerup == "t+?") {
+            tentativi -= random_device()() % 100;
+            cout << "Sono stati aggiunti ? tentativi" << endl;
+        } else if (powerup == "t-?") {
+            tentativi += random_device()() % 100;
+            cout << "Sono stati tolti ? tentativi" << endl;
+        } else if (powerup == "n+") {
+            cout << "Il numero e': " << numero << endl;
+        } else if (powerup == "n-") {
+            numero = random_device()() % limite + 1;
+            cout << "Il numero e' stato cambiato" << endl;
         }
-    }
+    };
 
-    if (difficoltà == "medium")
-    {
-        n = rand() % 100;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 100:\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "hai indovinato\n";
-                cout << "il numero era: " << n << "\n";
-                return 0;
+    cout << "Benvenuto!\nI powerup disponibili sono:\n - t+\tAggiunge 5 tentativi\n - t-\tToglie 5 "
+            "tentativi\n - t+?\tAggiunge un numero casuale di tentativi\n - t-?\tToglie un numero "
+            "casuale di tentativi\n - n+\tRivela il numero da indovinare\n - n-\tAggiorna il "
+            "numero da indovinare\nI powerup si possono usare durante la digitazione del "
+            "numero\n\nPer iniziare seleziona la difficolta':"
+         << endl;
+    for (auto &el : difficolta_disponibili) cout << "- " << el.nome << endl;
+    cout << endl << "La tua scelta: ";
+    string difficolta_scelta;
+    cin >> difficolta_scelta;
+    bool trovato = false;
+    for (auto &el : difficolta_disponibili)
+        if (el.nome == difficolta_scelta) {
+            trovato       = true;
+            size_t numero = random_device()() % el.limite + 1;
+            int64_t tentativi;
+            bool indovinato = false;
+            cout << "Indovina il numero compreso tra 1 e " << el.limite << endl;
+            for (tentativi = 0; tentativi < el.tentativi && !indovinato; tentativi++) {
+                cout << "Inserisci il numero: ";
+                string scelto;
+                cin >> scelto;
+                if ('0' <= scelto[0] && scelto[0] <= '9') {
+                    if (stoull(scelto) == numero) indovinato = true;
+                    else if (stoull(scelto) < numero)
+                        cout << "Il numero e' piu' alto di quello inserito" << endl;
+                    else
+                        cout << "Il numero e' piu' basso di quello inserito" << endl;
+                } else {
+                    gestisciPowerup(scelto, numero, tentativi, el.limite);
+                    tentativi--;
+                }
             }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 10)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-            cout << "\n";
-            cout << "scrivi una qialsiasi lettera per non avere powerup\n";
-            cin >> powerup;
-            if (powerup == "t++")
-            {
-                tentativi -= 5;
-                cout << "ti ho dato 5 tentativi";
-            }
-            else if (powerup == "n++")
-            {
-                cout << "il numero era: " << n << "\n";
-            }
-            else if (powerup == "t--")
-            {
-                tentativi += 5;
-            }
-            else if (powerup == "n--")
-            {
-                n = rand() % 100;
-            }
-            else if (powerup == "t+?")
-            {
-                tentativi = rand() % 10;
-            }
-            else if (powerup == "n+?")
-            {
-                n = rand();
-            }
-            else if (powerup == "t-?")
-            {
-                tentativi += rand();
-            }
+            if (indovinato) cout << "Complimenti! Hai indovinato il numero" << endl;
+            else
+                cout << "Non sei riuscito ad indovinare il numero! Era: " << numero << endl;
         }
-    }
-
-    if (difficoltà == "hard")
-    {
-        n = rand() % 1000;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 1000\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "hai indovinato\n";
-                cout << "il numero era: " << n << "\n";
-                return 0;
-            }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 10)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-            cout << "\n";
-            cout << "scrivi una qialsiasi lettera per non avere powerup\n";
-            cin >> powerup;
-            if (powerup == "t++")
-            {
-                tentativi -= 5;
-                cout << "ti ho dato 5 tentativi";
-            }
-            else if (powerup == "n++")
-            {
-                cout << "il numero era: " << n << "\n";
-            }
-            else if (powerup == "t--")
-            {
-                tentativi += 5;
-            }
-            else if (powerup == "n--")
-            {
-                n = rand() % 1000;
-            }
-            else if (powerup == "t+?")
-            {
-                tentativi = rand() % 10;
-            }
-            else if (powerup == "n+?")
-            {
-                n = rand();
-            }
-            else if (powerup == "t-?")
-            {
-                tentativi += rand();
-            }
-        }
-    }
-
-    if (difficoltà == "extreme")
-    {
-        n = rand() % 10000;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 10000\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "hai indovinato\n";
-                cout << "il numero era: " << n << "\n";
-                return 0;
-            }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 5)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-            cout << "\n";
-            cout << "scrivi una qialsiasi lettera per non avere powerup\n";
-            cin >> powerup;
-            if (powerup == "t++")
-            {
-                tentativi -= 5;
-                cout << "ti ho dato 5 tentativi";
-            }
-            else if (powerup == "n++")
-            {
-                cout << "il numero era: " << n << "\n";
-            }
-            else if (powerup == "t--")
-            {
-                tentativi += 5;
-            }
-            else if (powerup == "n--")
-            {
-                n = rand() % 10000;
-            }
-            else if (powerup == "t+?")
-            {
-                tentativi = rand() % 10;
-            }
-            else if (powerup == "n+?")
-            {
-                n = rand();
-            }
-            else if (powerup == "t-?")
-            {
-                tentativi += rand();
-            }
-        }
-    }
-
-    if (difficoltà == "impossible")
-    {
-        n = rand() % 438156;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero da 1 a 43815637465874653846\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "?????come hai fatto?????\n";
-                cout << "il numero era " << n << "\n";
-                return 0;
-            }
-            else if (ngiusto < n)
-            {
-                cout << "di più\n";
-            }
-            else if (ngiusto > n)
-            {
-                cout << "di meno\n";
-            }
-            if (tentativi == 2)
-            {
-                cout << "hai finito i tentativi\n";
-                return 0;
-            }
-            cout << "\n";
-            cout << "scrivi una qialsiasi lettera per non avere powerup\n";
-            cin >> powerup;
-            if (powerup == "t++")
-            {
-                tentativi -= 5;
-                cout << "ti ho dato 5 tentativi";
-            }
-            else if (powerup == "n++")
-            {
-                cout << "il numero era: " << n << "\n";
-            }
-            else if (powerup == "t--")
-            {
-                tentativi += 5;
-            }
-            else if (powerup == "n--")
-            {
-                n = rand() % 438156;
-            }
-            else if (powerup == "t+?")
-            {
-                tentativi = rand() % 10;
-            }
-            else if (powerup == "n+?")
-            {
-                n = rand();
-            }
-            else if (powerup == "t-?")
-            {
-                tentativi += rand();
-            }
-        }
-    }
-
-    if (difficoltà == "?")
-    {
-        n = rand() % 2;
-        while (true)
-        {
-            tentativi++;
-            cout << "indovina il numero misterioso\n";
-            cin >> ngiusto;
-            if (ngiusto == n)
-            {
-                cout << "uau\n";
-                cout << "il numero era: " << n;
-                return 0;
-            }
-            if (tentativi == 289015)
-            {
-                cout << "mamma mia!\n";
-            }
-            cout << "\n";
-            cout << "scrivi una qialsiasi lettera per non avere powerup\n";
-            cin >> powerup;
-            if (powerup == "t++")
-            {
-                tentativi -= 5;
-                cout << "ti ho dato 5 tentativi";
-            }
-            else if (powerup == "n++")
-            {
-                cout << "il numero era: " << n << "\n";
-            }
-            else if (powerup == "t--")
-            {
-                tentativi += 5;
-            }
-            else if (powerup == "n--")
-            {
-                n = rand() % 2;
-            }
-            else if (powerup == "t+?")
-            {
-                tentativi = rand() % 10;
-            }
-            else if (powerup == "n+?")
-            {
-                n = rand();
-            }
-            else if (powerup == "t-?")
-            {
-                tentativi += rand();
-            }
-        }
-    }
+    if (!trovato) cout << "Difficolta' scelta non disponibile" << endl;
+    return 0;
 }
